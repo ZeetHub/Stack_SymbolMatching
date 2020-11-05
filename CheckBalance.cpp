@@ -126,25 +126,6 @@ int main()
 {
     stack<int> st;
     createStack(&st, 5);
-    push(&st, 45);
-	push(&st, 35);
-	push(&st, 25);
-	push(&st, 15);
-	push(&st, 5);
 
-    displayStack(st);
-
-    cout<<endl<<peekTop(st)<<endl;
-
-    resize(&st, 10);
-
-    pop(&st);
-    pop(&st);
-
-    cout<<peekTop(st)<<endl;
-
-    displayStack(st);
-    destroy(&st);
-    displayStack(st);
 
 }
