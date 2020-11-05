@@ -125,7 +125,22 @@ void displayStack(stack<T> st)
 int main()
 {
     stack<int> st;
-    createStack(&st, 5);
+    createStack(&st);
+    ifstream fin {"sourceCode.txt", ios::in};
 
+    char ch;
 
+    while(!fin.eof())
+    {
+        fin.get(ch);
+        if(ch == '/')
+        {
+            fin.get(ch);
+            if(ch == '/')
+                fin.seekg(0,ios::end);
+        }
+            
+    }
+
+    fin.close();
 }
