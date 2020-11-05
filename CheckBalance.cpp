@@ -128,19 +128,23 @@ int main()
     createStack(&st);
     ifstream fin {"sourceCode.txt", ios::in};
 
-    char ch;
+    string readLine {};
+    char chOne, chTwo;
 
     while(!fin.eof())
     {
-        fin.get(ch);
-        if(ch == '/')
+        fin.get(chOne);
+        fin.get(chTwo);
+        if(chOne == '/' && chTwo == '/')
+            getline(fin, readLine);
+        else if(chOne == '/' && chTwo == '*')
         {
-            fin.get(ch);
-            if(ch == '/')
-                getline
-            else if(ch == '*')
+            do
+            {
+                fin.get(chOne);
+                fin.get(chTwo);
+            } while (chOne != '*' || chTwo != '/' && !fin.eof());
         }
     }
-
     fin.close();
 }
