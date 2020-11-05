@@ -137,9 +137,9 @@ int main()
         {
             fin.get(ch);
             if(ch == '/')
-                fin.seekg(0,ios::end);
+                getline
+            else if(ch == '*')
         }
-            
     }
 
     fin.close();
