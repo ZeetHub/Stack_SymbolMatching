@@ -1,4 +1,5 @@
 #include<iostream>
+#include<fstream>
 /*
         Caller-->Callee
 by value: N --> M or *N --> M
@@ -81,7 +82,7 @@ bool resize(stack<T>* st, int capacity)
     if (!temp)
     {
         for(int i=0;i<st->capacity;i++)
-        temp[i] = st->baseArray[i];
+            temp[i] = st->baseArray[i];
     
         delete [] st->baseArray;
         

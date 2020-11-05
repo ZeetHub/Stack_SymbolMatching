@@ -1,0 +1,104 @@
+/* Zerihun Tilahun Eshete (ID No. TD 3767)
+    CS531 Lab Assignment Two*/
+
+//Programs asks user if he/she wants to exit after three failed attemps of entering user name.
+//Program gives only three trials for entering the password.
+//The associated files are also attached on the same folder.
+//The file for the username is called "userNameAuthentication.txt"
+//The file for the password is called "passwordAuthentication.txt"
+
+
+
+/*THE CORRECT USER NAME AND PASSOWORD SAVED IN THE FILES IS:
+
+        USER NAME: hilcoeuser
+        PASSWORD:  password!!
+*/
+
+#include<iostream>
+#include<fstream>
+#include<cstdlib>
+#include<cstring>
+
+using namespace std;
+
+void userName_authentication();
+void password_authentication();
+
+int main()
+{
+    userName_authentication();
+    return 0;
+}
+
+void userName_authentication()
+{
+    int flag = 1, trial = 0;
+    char exit_request = 'n';
+    char accept_userName[50] = "", stored_userName[50] = "";
+    ifstream fin;
+    fin.open("userNameAuthentication.txt");
+    fin.getline(stored_userName, sizeof(stored_userName)-1);
+    fin.seekg(0,ios::beg);
+    do
+    {
+        if (trial >= 1)
+            cout<< "User name not valid! Please try again: ";
+        else
+            cout<< "Enter your user name:  ";
+
+        cin.getline(accept_userName, sizeof(accept_userName)-1);
+        trial++;
+        
+        flag = strcmp(accept_userName, stored_userName);
+
+        system("cls");
+        if (flag != 0 && trial == 3)
+        {
+            cout<< "Too many wrong attempts! Do you want to exit? [y/n]: ";
+            cin>> exit_request;
+            cin.ignore();
+            if (exit_request == 'n' || exit_request == 'N')
+                trial = 0;
+            system("cls");
+        }
+
+    }while(flag != 0 && (exit_request == 'n' || exit_request == 'N'));
+    fin.close();
+    system("cls");
+
+    if (flag == 0)
+        password_authentication();
+
+}
+void password_authentication()
+{
+    int flag = 1, trial = 0;
+    char accept_password[50] = "", stored_password[50] = "";
+    ifstream fin;
+    fin.open("passwordAuthentication.txt");
+    fin.getline(stored_password, sizeof(stored_password)-1);
+
+    fin.seekg(0,ios::beg);
+    do
+    {
+        if (trial >= 1)
+            cout<< "Password not correct! You have "<<3-trial<<" trials: ";
+        else
+            cout<< "Enter your password. You have "<<3-trial<<" trials:  ";
+
+        cin.getline(accept_password, sizeof(accept_password)-1);
+        trial++;
+        
+        flag = strcmp(accept_password, stored_password);
+        system("cls");
+
+    }while(flag != 0 && trial<3);
+    fin.close();
+    system("cls");
+    if (flag == 0)
+        cout<< "Successfully Logged in!"<<endl;
+    else
+        cout<< "Too many wrong attempts. Please try again later!"<<endl;
+
+}
