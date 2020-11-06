@@ -118,33 +118,45 @@ void destroy(stack<T> *st)
 template<class T>
 void displayStack(stack<T> st)
 {
-    for(int i=st.top; i>=0;i--)
+    for(int i=st.top-1; i>=0;i--)
         cout<< st.baseArray[i]<<" ";
 }
 
 int main()
 {
-    stack<int> st;
-    createStack(&st);
+    stack<char> st;
+    createStack(&st, 3000);
     ifstream fin {"sourceCode.txt", ios::in};
 
     string readLine {};
     char chOne, chTwo;
 
-    while(!fin.eof())
+    // while(!fin.eof())
+    // {
+    //     fin.get(chOne);
+    //     fin.get(chTwo);
+    //     if(chOne == '/' && chTwo == '/')
+    //         getline(fin, readLine);
+    //     else if(chOne == '/' && chTwo == '*')
+    //     {
+    //         do
+    //         {
+    //             fin.get(chOne);
+    //             fin.get(chTwo);
+    //         } while ((chOne != '*' || chTwo != '/') && !fin.eof());
+    //     }
+    //     else if (chOne == '{')
+    //     {
+    //         /* code */
+    //     }
+    // }
+
+    while (!fin.eof())
     {
         fin.get(chOne);
-        fin.get(chTwo);
-        if(chOne == '/' && chTwo == '/')
-            getline(fin, readLine);
-        else if(chOne == '/' && chTwo == '*')
-        {
-            do
-            {
-                fin.get(chOne);
-                fin.get(chTwo);
-            } while (chOne != '*' || chTwo != '/' && !fin.eof());
-        }
+        // if(chOne == '/')
+            push(&st, chOne);
     }
+    
     fin.close();
 }
