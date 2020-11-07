@@ -1,104 +1,277 @@
-/* Zerihun Tilahun Eshete (ID No. TD 3767)
-    CS531 Lab Assignment Two*/
-
-//Programs asks user if he/she wants to exit after three failed attemps of entering user name.
-//Program gives only three trials for entering the password.
-//The associated files are also attached on the same folder.
-//The file for the username is called "userNameAuthentication.txt"
-//The file for the password is called "passwordAuthentication.txt"
-
-
-
-/*THE CORRECT USER NAME AND PASSOWORD SAVED IN THE FILES IS:
-
-        USER NAME: hilcoeuser
-        PASSWORD:  password!!
-*/
-
 #include<iostream>
 #include<fstream>
-#include<cstdlib>
-#include<cstring>
 
 using namespace std;
 
-void userName_authentication();
-void password_authentication();
+//#include"CheckBalance.cpp"
+
+const int NIL{-1};
+template<class T>
+struct stack
+{
+    T* baseArray;
+    int top;
+    int capacity;
+    int count;
+};
+
+template<class T>
+bool createStack(stack<T> *st, int capacity = 50)
+{
+    st->baseArray = new(nothrow)T[capacity];
+    st->top = NIL;
+    st->capacity = capacity;
+    st->count = 0;
+    return true;
+}
+
+template<class T>
+bool isFull(stack<T> st)
+{
+    return st.top == st.capacity-1;
+}
+
+template<class T>
+bool isEmpty(stack<T> st)
+{
+    return st.top == NIL;
+}
+
+template<class T>
+bool push(stack<T> *st, T item)
+{
+    if (!isFull(*st))
+        {
+            st->baseArray[++st->top] = item;
+            st->count++;
+            return true;
+        }
+    else
+        return false;
+}
+
+template<class T>
+bool pop(stack<T> *st, T& takePoppedItem = NIL)
+{
+    if(!isEmpty(*st))
+    {
+        takePoppedItem = st->baseArray[st->top];
+        st->top--;
+        return true;
+    }
+    else
+        return false;
+}
+
+template<class T>
+bool pop(stack<T> *st)
+{
+    if(!isEmpty(*st))
+    {
+        st->top--;
+        return true;
+    }
+    else
+        return false;
+}
+
+template<class T>
+T peekTop(stack<T> st)
+{
+    return st.baseArray[st.top];
+}
+
+template<class T>
+bool resize(stack<T>* st, int capacity)
+{
+    T* temp;
+    int tempCapacity = st->capacity;
+    temp = new(nothrow)T[st->capacity];
+    if (!temp)
+    {
+        for(int i=0;i<st->capacity;i++)
+            temp[i] = st->baseArray[i];
+
+        delete [] st->baseArray;
+
+        createStack(*&st, capacity);
+
+        for(int i=0;i<tempCapacity;i++)
+        {
+            st->baseArray[i] = temp[i];
+            st->count++;
+            st->top++;
+        }
+
+        return true;
+    }
+
+    return false;
+
+}
+
+template<class T>
+void clear(stack<T> *st)
+{
+    st->top = NIL;
+}
+
+template<class T>
+void destroy(stack<T> *st)
+{
+    clear(st);
+    delete [] st->baseArray;
+}
+
+// template<class T>
+// void displayStack(stack<T> st)
+// {
+//     for(int i=0; i<=st.top;i++)
+//         cout<< st.baseArray[i]<<" ";
+// }
+
+template<class T>
+void displayStack(stack<T> st)
+{
+    for(int i=st.top; i>=0;i--)
+        cout<< st.baseArray[i]<<" ";
+}
 
 int main()
 {
-    userName_authentication();
-    return 0;
-}
+    stack<char> st;
+    createStack(&st, 300);
+    ifstream fin {"sourceCode.txt", ios::in};
 
-void userName_authentication()
-{
-    int flag = 1, trial = 0;
-    char exit_request = 'n';
-    char accept_userName[50] = "", stored_userName[50] = "";
-    ifstream fin;
-    fin.open("userNameAuthentication.txt");
-    fin.getline(stored_userName, sizeof(stored_userName)-1);
-    fin.seekg(0,ios::beg);
-    do
+    string readLine {};
+    char chOne, chTwo;
+
+    bool foundAtNext;
+    while (fin.peek() != EOF)
     {
-        if (trial >= 1)
-            cout<< "User name not valid! Please try again: ";
-        else
-            cout<< "Enter your user name:  ";
-
-        cin.getline(accept_userName, sizeof(accept_userName)-1);
-        trial++;
-        
-        flag = strcmp(accept_userName, stored_userName);
-
-        system("cls");
-        if (flag != 0 && trial == 3)
+        fin.get(chOne);
+        if(chOne == '/')
         {
-            cout<< "Too many wrong attempts! Do you want to exit? [y/n]: ";
-            cin>> exit_request;
-            cin.ignore();
-            if (exit_request == 'n' || exit_request == 'N')
-                trial = 0;
-            system("cls");
+            fin.get(chTwo);
+            if(chTwo == '/')
+                getline(fin, readLine);
+            else if(chTwo == '*')
+            {
+                do
+                {
+                    fin.get(chTwo);
+                    foundAtNext = fin.peek() == '/';
+                } while (chTwo != '*' || !foundAtNext);
+                fin.get(chTwo);
+            }
+        }
+        else if(chOne == '"')
+        {
+            do
+            {
+                fin.get(chTwo);
+                // foundAtNext = fin.peek() == '/';
+            } while (chTwo != '"');
+            // fin.get(chTwo);
+        }
+        else if(chOne == '\'')
+        {
+            do
+            {
+                fin.get(chTwo);
+            } while (chTwo != '\'');
+            if(fin.peek() == '\'')
+                fin.get(chTwo);
+        }
+        else if(chOne == '{' || chOne == '(' || chOne == '[' || chOne == '}' || chOne == ')' || chOne == ']')
+        {
+            push(&st, chOne);
+        }
+    }
+    displayStack(st);
+    cout<<endl;
+
+    char symbol;
+    int curlyOpen=0,parenthOpen=0,bracketOpen=0,curlyClose=0,parenthClose=0,bracketClose=0;
+    cout<<endl<<st.top<<endl;
+    while (st.top >= 0)
+    {
+        pop(&st, symbol);
+        switch (symbol)
+        {
+        case '}':
+            curlyClose++;
+            break;
+        case ')':
+            parenthClose++;
+            break;
+        case ']':
+            bracketClose++;
+            break;
+        case '{':
+            curlyOpen++;
+            break;
+        case '(':
+            parenthOpen++;
+            break;
+        case '[':
+            bracketOpen++;
+            break;
+        case '"':
+        {
+            do
+            {
+                pop(&st, chTwo);
+            } while (chTwo != '"');
+        }
+            break;
+        case '\'':
+        {
+            do
+            {
+                pop(&st, chTwo);
+            } while (chTwo != '\'');
+        }
+            break;
+        default:
+            break;
+        }
+    }
+
+        if(curlyOpen == curlyClose)
+        {
+            cout<<"C_ok"<<endl;
+            cout<<"Copen = "<<curlyOpen<<endl;
+            cout<<"Cclose = "<<curlyClose<<endl;
+        }
+        else
+        {
+            cout<<"Copen = "<<curlyOpen<<endl;
+            cout<<"Cclose = "<<curlyClose<<endl;
+        }
+        if(bracketOpen == bracketClose)
+        {
+            cout<<"B_ok"<<endl;
+            cout<<"Bopen = "<<bracketOpen<<endl;
+            cout<<"Bclose = "<<bracketClose<<endl;
+        }
+        else
+        {
+            cout<<"Bopen = "<<bracketOpen<<endl;
+            cout<<"Bclose = "<<bracketClose<<endl;
         }
 
-    }while(flag != 0 && (exit_request == 'n' || exit_request == 'N'));
-    fin.close();
-    system("cls");
-
-    if (flag == 0)
-        password_authentication();
-
-}
-void password_authentication()
-{
-    int flag = 1, trial = 0;
-    char accept_password[50] = "", stored_password[50] = "";
-    ifstream fin;
-    fin.open("passwordAuthentication.txt");
-    fin.getline(stored_password, sizeof(stored_password)-1);
-
-    fin.seekg(0,ios::beg);
-    do
-    {
-        if (trial >= 1)
-            cout<< "Password not correct! You have "<<3-trial<<" trials: ";
+        if(parenthOpen == parenthClose)
+        {
+            cout<<"P_ok"<<endl;
+            cout<<"Popen = "<<parenthOpen<<endl;
+            cout<<"Pclose = "<<parenthClose<<endl;
+        }
         else
-            cout<< "Enter your password. You have "<<3-trial<<" trials:  ";
+        {
+            cout<<"Popen = "<<parenthOpen<<endl;
+            cout<<"Pclose = "<<parenthClose<<endl;
+        }
 
-        cin.getline(accept_password, sizeof(accept_password)-1);
-        trial++;
-        
-        flag = strcmp(accept_password, stored_password);
-        system("cls");
-
-    }while(flag != 0 && trial<3);
     fin.close();
-    system("cls");
-    if (flag == 0)
-        cout<< "Successfully Logged in!"<<endl;
-    else
-        cout<< "Too many wrong attempts. Please try again later!"<<endl;
-
 }

@@ -1,13 +1,9 @@
 #include<iostream>
 #include<fstream>
-/*
-        Caller-->Callee
-by value: N --> M or *N --> M
-by alias: N --> &M or N --> *&M
-by pointer: N --> *M or *&N --> *M
-*/
 
 using namespace std;
+
+//#include"CheckBalance.cpp"
 
 const int NIL{-1};
 template<class T>
@@ -145,7 +141,7 @@ int main()
 {
     stack<char> st;
     createStack(&st, 300);
-    ifstream fin {"LL_Array.txt", ios::in};
+    ifstream fin {"sourceCode.txt", ios::in};
 
     string readLine {};
     char chOne, chTwo;
@@ -183,9 +179,9 @@ int main()
             do
             {
                 fin.get(chTwo);
-                // foundAtNext = fin.peek() == '/';
             } while (chTwo != '\'');
-            // fin.get(chTwo);
+            if(fin.peek() == '\'')
+                fin.get(chTwo);
         }
         else if(chOne == '{' || chOne == '(' || chOne == '[' || chOne == '}' || chOne == ')' || chOne == ']')
         {
@@ -226,7 +222,7 @@ int main()
             do
             {
                 pop(&st, chTwo);
-            } while (chTwo != '"');  
+            } while (chTwo != '"');
         }
             break;
         case '\'':
@@ -264,7 +260,7 @@ int main()
             cout<<"Bopen = "<<bracketOpen<<endl;
             cout<<"Bclose = "<<bracketClose<<endl;
         }
-        
+
         if(parenthOpen == parenthClose)
         {
             cout<<"P_ok"<<endl;
@@ -276,6 +272,6 @@ int main()
             cout<<"Popen = "<<parenthOpen<<endl;
             cout<<"Pclose = "<<parenthClose<<endl;
         }
-    
+
     fin.close();
 }
