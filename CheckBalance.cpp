@@ -3,8 +3,6 @@
 
 using namespace std;
 
-//#include"CheckBalance.cpp"
-
 const int NIL{-1};
 template<class T>
 struct stack
