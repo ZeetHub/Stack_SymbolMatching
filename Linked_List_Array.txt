@@ -1,0 +1,120 @@
+#include<iostream>
+
+using namespace std;
+
+const int MAX = 1000;
+const int NIL = -1;
+
+struct node{
+    double data;
+    int freq;
+    int next;
+};
+
+struct LList{
+    int Listhead;
+    int size;
+};
+
+void createLinkedList(struct node List[, int &head, int &avail){
+    for(int ind = 0; ind < MAX - 1; ind++)
+        List[ind].next = ind + 1;
+    List[MAX-1].next = -1;
+    head = NIL;
+    avail = 0;
+}
+
+bool isEmpty(int head){
+    return head==NIL;
+}
+
+bool isFull(int avail){
+    return avail==NIL;
+}
+
+int getNode(node List[], int &avail){
+    int p = NIL;
+    if(avail != NIL){
+        p = avail;
+        avail = List[avail].next;
+    }
+    return p;
+}
+
+void fillNode(node List[], double new_data, int&pos, int &avail){
+    pos = getNode(List, avail);
+    if(pos != NIL){
+        List[pos].data = new_data;
+        List[pos].next = NIL;
+    }
+    else{
+        cout<<"No Enough Space for Insertion"<<endl;
+        return;
+    }
+}
+
+int findPrevToInsert(node List[], int head, int p){
+    int prev = NIL;
+    int current = head;
+    bool found = false;
+    while(current != NIL && !found){
+        if(List[current].data < List[p].data){
+            prev = current;
+            current = List[current].next;
+        }
+        else found = true;
+    }
+    return prev;
+}
+
+void insertNode(node List[], int &head, int p, int prev){
+    if(prev == NIL){// conventionally insertion at head
+        List[p].next = head;
+        head = p;
+    }
+    else{
+        List[p].next = List[prev].next;
+        List[prev].next = p;
+    }
+}
+
+void displayList(node List[], int head){
+    while(head != NIL){
+        cout<<List[head].data<<endl;
+        head = List[head].next;
+    }
+}
+
+int main(){
+    node LL[MAX];
+    int head, avail;
+    createLinkedList(LL, head, avail);
+    int loc, pr;
+    fillNode(LL, 24, loc, avail);
+    pr = findPrevToInsert(LL, head,loc);
+    insertNode(LL, head, loc, pr);
+
+    fillNode(LL, 25.6, loc, avail);
+    pr = findPrevToInsert(LL, head,loc);
+    insertNode(LL, head, loc, pr);
+
+    fillNode(LL, -29.4, loc, avail);
+    pr = findPrevToInsert(LL, head,loc);
+    insertNode(LL, head, loc, pr);
+
+    fillNode(LL, 21, loc, avail);
+    pr = findPrevToInsert(LL, head,loc);
+    insertNode(LL, head, loc, pr);
+
+    fillNode(LL, 210.5, loc, avail);
+    pr = findPrevToInsert(LL, head,loc);
+    insertNode(LL, head, loc, pr);
+
+    fillNode(LL, 21, loc, avail);
+    pr = findPrevToInsert(LL, head,loc);
+    insertNode(LL, head, loc, pr);
+
+    displayList(LL, head);
+
+    return 0;
+}
